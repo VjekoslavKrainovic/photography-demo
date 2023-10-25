@@ -86,6 +86,11 @@
     A: Ovo mi je bilo puno zanimljivije za raditi, ali i za Vas da mozete vidjeti kako pisem kod.
     
     Q: Zasto nisi mapirao Filter keywordove u plain SQL?
-    A: Ne bi mi bilo izazovan zadatak,a u productionu bi vjerovatno ovako nesto radili jer nemoramo brinuti o SQL injectionima itd...
+    A: Ne bi mi bilo izazovan zadatak,a u productionu bi vjerovatno ovako nesto radili jer nemoramo brinuti o SQL injectionima,
+        ako mjenjamo database ne moramo ponovo mjenjati adapter logiku jer izmedu SQL database-ova imaju sitne izmjene u syntaxi.
+
+    Q: Zasto imas gettere u Domain objektima kad Aggregate Root ne bi trebao exposati interne podatke te bih samo trebao imati Commands & Querys?
+    A: Jos uvijek nisam pronasao jednostavan nacin da bih mogao Domain objekte mapirat u DTO bez da koristim reflexion.
+
 
     
