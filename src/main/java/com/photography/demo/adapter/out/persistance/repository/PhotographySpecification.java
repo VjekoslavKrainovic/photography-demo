@@ -7,22 +7,28 @@ import com.photography.demo.domain.search.FieldName;
 import com.photography.demo.domain.search.LogicalOperator;
 import com.photography.demo.domain.search.SearchPhotography;
 import com.photography.demo.domain.search.SubQuery;
+import jakarta.persistence.criteria.Path;
 import java.util.List;
 import org.springframework.data.jpa.domain.Specification;
 
 
 public class PhotographySpecification {
 
+  private static final String FIELD_NAME = "name";
+  private static final String FIELD_AUTHOR = "author";
+  private static final String FIELD_TAGS = "tags";
+
   private PhotographySpecification() {
   }
 
   public static Specification<PhotographyDbo> createSearch(SearchPhotography searchPhotography) {
 
+    Specification<PhotographyDbo> specificationQuery = Specification.where(null);
+
     if (searchPhotography.getSubQueries().isEmpty()) {
-      return Specification.where(null);
+      return specificationQuery;
     }
 
-    Specification<PhotographyDbo> specificationQuery = null;
 
     LogicalOperator lastSubqueryLogicalOperator = null;
 
@@ -41,7 +47,7 @@ public class PhotographySpecification {
 
     }
 
-    return specificationQuery;
+    return specificationQuery.and(distinct());
   }
 
   public static Specification<PhotographyDbo> createSubQuery(SubQuery subQuery) {
@@ -76,12 +82,20 @@ public class PhotographySpecification {
       String fieldName = mapFieldName(field.getFieldName());
       String searchParameter = field.getSearchParameter();
 
+      Path<String> fieldNamePath;
+
+      if (field.getFieldName() == FieldName.TAG) {
+        fieldNamePath = root.get(fieldName).get(FIELD_NAME);
+      } else {
+        fieldNamePath = root.get(fieldName);
+      }
+
       if (field.getComparisonOperator() == ComparisonOperator.CONTAINS) {
-        return criteriaBuilder.like(root.get(fieldName), "%" + searchParameter + "%");
+        return criteriaBuilder.like(fieldNamePath, "%" + searchParameter + "%");
       } else if (field.getComparisonOperator() == ComparisonOperator.EQUAL) {
-        return criteriaBuilder.equal(root.get(fieldName), searchParameter);
+        return criteriaBuilder.equal(fieldNamePath, searchParameter);
       } else if (field.getComparisonOperator() == ComparisonOperator.NOT_EQUAL) {
-        criteriaBuilder.notEqual(root.get(fieldName), searchParameter);
+        criteriaBuilder.notEqual(fieldNamePath, searchParameter);
       }
       return null;
     };
@@ -89,18 +103,21 @@ public class PhotographySpecification {
 
   private static String mapFieldName(FieldName fieldName) {
     if (fieldName == FieldName.NAME) {
-      return "name";
+      return FIELD_NAME;
     } else if (fieldName == FieldName.AUTHOR) {
-      return "author";
+      return FIELD_AUTHOR;
     } else if (fieldName == FieldName.TAG) {
-      return "tag";
+      return FIELD_TAGS;
     }
 
     throw new IllegalArgumentException("Non existing field name");
   }
 
-  public static Specification<PhotographyDbo> test(String string) {
-    return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("author"), string);
+  private static Specification<PhotographyDbo> distinct(){
+     return (root, query, criteriaBuilder) -> {
+       query.distinct(true);
+       return null;
+     };
   }
 
 }

@@ -38,24 +38,21 @@ public class SearchWordsRequest {
     validKeywords.add(CLOSE_BRACKET);
   }
 
-  public boolean isValidFilter(List<String> keywords) {
+  public void validateFilter(List<String> keywords) {
 
     String lastKeyword = null;
 
     for (String keyword : keywords) {
       if (!isSearchParameter(keyword) && !validKeywords.contains(keyword)) {
-        log.debug("Keyword: {} is invalid.", keyword);
-        return false;
+        throw new InvalidFilterKeywordException(keyword);
       }
 
       if (!isValidOrder(lastKeyword, keyword)) {
-        return false;
+        throw new InvalidFilterKeywordException(keyword);
       }
 
       lastKeyword = keyword;
     }
-
-    return true;
   }
 
   public boolean isSearchParameter(String keyword) {

@@ -142,7 +142,8 @@ class SearchPhotographyMapperTest {
 
     // execute && verify
     assertThatThrownBy(() -> searchPhotographyMapper.map(filter, null))
-        .isInstanceOf(InvalidFilterKeywordException.class);
+        .isInstanceOf(InvalidFilterKeywordException.class)
+        .hasMessage("Invalid filter keyword: eqzyx .");
   }
 
   @Test
@@ -152,7 +153,8 @@ class SearchPhotographyMapperTest {
 
     // execute && verify
     assertThatThrownBy(() -> searchPhotographyMapper.map(filter, null))
-        .isInstanceOf(InvalidFilterKeywordException.class);
+        .isInstanceOf(InvalidFilterKeywordException.class)
+        .hasMessage("Invalid filter keyword: ‘Nature’ .");
   }
 
   @Test
@@ -162,7 +164,9 @@ class SearchPhotographyMapperTest {
 
     // execute && verify
     assertThatThrownBy(() -> searchPhotographyMapper.map(filter, null))
-        .isInstanceOf(InvalidFilterKeywordException.class);
+        .isInstanceOf(InvalidFilterKeywordException.class)
+        .hasMessage("Invalid filter keyword: and .");
+    ;
   }
 
   @Test
@@ -172,7 +176,9 @@ class SearchPhotographyMapperTest {
 
     // execute && verify
     assertThatThrownBy(() -> searchPhotographyMapper.map(filter, null))
-        .isInstanceOf(InvalidFilterKeywordException.class);
+        .isInstanceOf(InvalidFilterKeywordException.class)
+        .hasMessage("Invalid filter keyword: ) .");
+    ;
   }
 
   @Test
@@ -182,7 +188,9 @@ class SearchPhotographyMapperTest {
 
     // execute && verify
     assertThatThrownBy(() -> searchPhotographyMapper.map(filter, null))
-        .isInstanceOf(InvalidFilterKeywordException.class);
+        .isInstanceOf(InvalidFilterKeywordException.class)
+        .hasMessage("Invalid filter keyword: and .");
+    ;
   }
 
 }

@@ -30,20 +30,12 @@ public class SearchPhotographyMapper {
     List<String> filterKeywords = Arrays.stream(filter.split(" "))
         .toList();
 
-    validateFilterKeywords(filterKeywords);
+    searchWordsRequest.validateFilter(filterKeywords);
 
     List<String> rawSubQueries = splitFilterKeywordsInRawSubqueries(filter);
     List<SubQuery> subQueries = mapRawSubQueriesToSubqueries(rawSubQueries);
 
     return new SearchPhotography(subQueries, pageable);
-  }
-
-  private void validateFilterKeywords(List<String> filterKeywords) {
-    boolean isValidKeywords = searchWordsRequest.isValidFilter(filterKeywords);
-
-    if (!isValidKeywords) {
-      throw new InvalidFilterKeywordException();
-    }
   }
 
   private List<String> splitFilterKeywordsInRawSubqueries(String filter) {

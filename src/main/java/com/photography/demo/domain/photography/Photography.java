@@ -1,5 +1,6 @@
 package com.photography.demo.domain.photography;
 
+import com.photography.demo.application.exception.MaximumNumberTagsReachedException;
 import com.photography.demo.util.Utility;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -8,6 +9,7 @@ import java.util.Objects;
 
 public class Photography {
 
+  private static final int MAXIMUM_TAG_NUMBER = 100;
   private final PhotographyId id;
   private String name;
   private String description;
@@ -31,7 +33,7 @@ public class Photography {
     this.tags = new ArrayList<>();
   }
 
-  public boolean hasId(){
+  public boolean hasId() {
     return this.id != null;
   }
 
@@ -45,6 +47,9 @@ public class Photography {
   }
 
   public void addTag(Tag tag) {
+    if (this.tags.size() > MAXIMUM_TAG_NUMBER) {
+      throw new MaximumNumberTagsReachedException();
+    }
     this.tags.add(tag);
   }
 
