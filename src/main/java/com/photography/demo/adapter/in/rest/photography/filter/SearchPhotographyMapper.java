@@ -76,15 +76,21 @@ public class SearchPhotographyMapper {
   }
 
   private List<SubQuery> mapRawSubQueriesToSubqueries(List<String> subQueriesRaw) {
+
     List<SubQuery> subQueries = new ArrayList<>();
+
     for (String rawSubQuery : subQueriesRaw) {
       SubQuery subQuery = new SubQuery();
+
       FieldName fieldName = null;
       ComparisonOperator comparisonOperator = null;
       String searchParameter = null;
       LogicalOperator logicalOperator = null;
+
       String[] rawSubQuerySplited = rawSubQuery.split(" ");
+
       for (int i = 0; i < rawSubQuerySplited.length; i++) {
+
         if (searchWordsRequest.isFieldAuthor(rawSubQuerySplited[i])) {
           fieldName = FieldName.AUTHOR;
         } else if (searchWordsRequest.isFieldName(rawSubQuerySplited[i])) {
@@ -101,6 +107,7 @@ public class SearchPhotographyMapper {
           searchParameter = rawSubQuerySplited[i];
         } else if (searchWordsRequest.isLogicalOperatorOr(rawSubQuerySplited[i])) {
           logicalOperator = LogicalOperator.OR;
+
           if (rawSubQuerySplited.length == (i + 1)) {
             subQuery.addLogicalOperator(logicalOperator);
             subQuery.addField(new Field(fieldName, comparisonOperator, searchParameter, null));
@@ -115,8 +122,11 @@ public class SearchPhotographyMapper {
             searchParameter = null;
             logicalOperator = null;
           }
+
         } else if (searchWordsRequest.isLogicalOperatorAnd(rawSubQuerySplited[i])) {
+
           logicalOperator = LogicalOperator.AND;
+
           if (rawSubQuerySplited.length == (i + 1)) {
             subQuery.addLogicalOperator(logicalOperator);
             subQuery.addField(new Field(fieldName, comparisonOperator, searchParameter, null));
@@ -132,6 +142,7 @@ public class SearchPhotographyMapper {
             logicalOperator = null;
           }
         }
+        
         if ((rawSubQuerySplited.length == (i + 1)) && !searchWordsRequest.isLogicalOperator(rawSubQuerySplited[i])) {
           subQuery.addField(new Field(fieldName, comparisonOperator, searchParameter, logicalOperator));
           fieldName = null;
