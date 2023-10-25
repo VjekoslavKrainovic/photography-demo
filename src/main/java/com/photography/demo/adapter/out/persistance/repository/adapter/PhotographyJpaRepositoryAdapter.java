@@ -52,7 +52,6 @@ public class PhotographyJpaRepositoryAdapter implements PhotographyRepository {
   @Transactional
   @Override
   public void delete(PhotographyId photographyId) {
-    // todo dodaj rollback
     tagJpaRepository.deleteByPhotographyId(photographyId.id());
     photographyJpaRepository.deleteById(photographyId.id());
   }
@@ -60,7 +59,6 @@ public class PhotographyJpaRepositoryAdapter implements PhotographyRepository {
   @Transactional
   @Override
   public PhotographyId save(Photography photography) {
-    // todo dodaj rollback
     PhotographyDbo photographyDbo = photographyMapper.asPhotographyDbo(photography);
     PhotographyDbo savedPhotographyDbo = photographyJpaRepository.save(photographyDbo);
     List<TagDbo> tagsDbo = photography.getTags().stream()

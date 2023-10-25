@@ -6,6 +6,7 @@
 - Imam validaciju svih keywordova, te izmedu svakog keyworda MORA biti razmak.
 - Imam validaciju redosljedi keywordova.
 - Ne koristim Swagger za API dokumentaciju, jer objasnjavam kako koristiti u ovom readme-u.
+- Na Save i Delete imam rollback ako se dogodi bilo kakav runtime exception
 
 # Kako koristi endpoint-e
 
@@ -22,7 +23,7 @@
       "width": 22.0,
       "height": 300.1,
       "tags": ["tag3", "tag4"]
-      }` POST body pomocu kojeg kreiramo fotograciju, te su svih fieldovi required
+      }` POST body pomocu kojeg kreiramo fotograciju, te su svi field-ovi required
 
 
 - PUT `http://localhost:8080/api/v1/photographies/` :
@@ -35,11 +36,11 @@
       "tags": [{
       "id": 2,
       "name": "tag2"}]
-      }` PUT body pomocu kojeg update-amo postojecu fotografiju, te su svih fieldovi required.
+      }` PUT body pomocu kojeg update-amo postojecu fotografiju, te su svi field-ovi required.
     - `{photohraphy-id}` je id fotografije  koji koristimo da bih znali koju fotografiju trebamo update-ati, te ako ne postoji endpoint baca gresku
     - Ako ne upisem id u tag, kreira se novi tag.
     - Ako stavimo tag id koji ne postoji u bazi ili pripada drugoj fotografiji dobit cemo gresku na endpointu
-    - Ako stavimo postojeci tag id onda ce se update-ati postojeci tag 
+    - Ako stavimo postojeci tag id onda ce se update-ati postojeci tag
 
 
 - DELETE `http://localhost:8080/api/v1/photographies/{photohraphy-id}` :
@@ -51,7 +52,15 @@
     - `sort=createdAt,asc` sort query parametar, umjesto `asc` se moze koristiti i `desc`, nije required
     - `page=0` pagination number, nije required
     - `size=1` pagination page size, nije required
-    - Pripaziti da se koriste curly qutoes kao sto je u primjeru zadataka :) umjesto signle qutoes za field name.
+    - Pripaziti da se koriste curly qutoes kao sto je u primjeru zadataka :) umjesto single qutoes za field name.
+
+# Domain design
+- `Photography` je Aggregate Root
+- `Tag` Entity
+- `Size` Value object
+- `PhotographyDashboardService` Application service
+- Paketi su napravljeni po primjeru paketa za Hexagonalne Arhitekture
+- Flow ide `Controller` -> `Application Service` -> `Domain Repository` -> `Adapter Repository`
 
 # Questions & Answers
 

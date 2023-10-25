@@ -7,7 +7,7 @@ import java.util.Locale;
 
 public class Utility {
 
-  public static final String LOCAL_DATE_TIME_PATTERN = "dd/MM/yyyy HH:mm";
+  private static final String LOCAL_DATE_TIME_PATTERN = "dd/MM/yyyy HH:mm";
 
   private Utility() {
   }
