@@ -1,0 +1,8 @@
+
+y	java:S127G"XRefactor the code in order to not assign to this loop counter from within the loop body.(¿—”Çøÿÿÿÿ8ýäæïµ1
+t
+java:S37761"RRefactor this method to reduce its Cognitive Complexity from 17 to the 15 allowed.(‘æúÙûÿÿÿÿ8Øææïµ1
+o
+java:S3776V"RRefactor this method to reduce its Cognitive Complexity from 28 to the 15 allowed.(¾·ŒÏ8Úææïµ1
+ã
+java:S6541V"ÅA "Brain Method" was detected. Refactor it to reduce at least one of the following metrics: LOC from 69 to 64, Complexity from 16 to 14, Nesting Level from 4 to 2, Number of Variables from 10 to 6.(¾·ŒÏ8²Å®ðµ1
