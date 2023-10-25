@@ -2,8 +2,10 @@ package com.photography.demo.adapter.in.rest.photography.filter;
 
 import java.util.ArrayList;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 public class SearchWordsRequest {
 
@@ -42,6 +44,7 @@ public class SearchWordsRequest {
 
     for (String keyword : keywords) {
       if (!isSearchParameter(keyword) && !validKeywords.contains(keyword)) {
+        log.debug("Keyword: {} is invalid.", keyword);
         return false;
       }
 

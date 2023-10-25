@@ -7,50 +7,70 @@ import com.photography.demo.domain.search.FieldName;
 import com.photography.demo.domain.search.LogicalOperator;
 import com.photography.demo.domain.search.SearchPhotography;
 import com.photography.demo.domain.search.SubQuery;
+import java.util.List;
 import org.springframework.data.jpa.domain.Specification;
 
 
 public class PhotographySpecification {
 
+  private PhotographySpecification() {
+  }
+
   public static Specification<PhotographyDbo> createSearch(SearchPhotography searchPhotography) {
-    Specification<PhotographyDbo> specificationQuery = Specification.where(null);
 
     if (searchPhotography.getSubQueries().isEmpty()) {
-      return specificationQuery;
+      return Specification.where(null);
     }
 
-    for (SubQuery subQuery : searchPhotography.getSubQueries()) {
+    Specification<PhotographyDbo> specificationQuery = null;
+
+    LogicalOperator lastSubqueryLogicalOperator = null;
+
+    List<SubQuery> subQueries = searchPhotography.getSubQueries();
+    for (int i = 0; i < subQueries.size(); i++) {
+      SubQuery subQuery = subQueries.get(i);
       Specification<PhotographyDbo> specificationSubQuery = createSubQuery(subQuery);
-      if (subQuery.getLogicalOperator() == null) {
-        return specificationQuery.and(specificationSubQuery); // TODO: fix this, trebas uzet od prijasnjeg subquerya logicne operatore a ne od trenutnog
-      } else if (subQuery.getLogicalOperator() == LogicalOperator.AND) {
-        specificationQuery.and(specificationSubQuery);
-      } else if (subQuery.getLogicalOperator() == LogicalOperator.OR) {
-        specificationQuery.or(specificationSubQuery);
+      if (i == 0) {
+        specificationQuery = specificationSubQuery;
+        lastSubqueryLogicalOperator = subQuery.getLogicalOperator();
+      } else if (lastSubqueryLogicalOperator == LogicalOperator.AND) {
+        specificationQuery = specificationQuery.and(specificationSubQuery);
+      } else if (lastSubqueryLogicalOperator == LogicalOperator.OR) {
+        specificationQuery = specificationQuery.or(specificationSubQuery);
       }
+
     }
 
     return specificationQuery;
   }
 
-  private static Specification<PhotographyDbo> createSubQuery(SubQuery subQuery) {
-    Specification<PhotographyDbo> specificationSubQuery = Specification.where(null);
+  public static Specification<PhotographyDbo> createSubQuery(SubQuery subQuery) {
+    Specification<PhotographyDbo> specificationSubQuery = null;
 
-    for (Field field : subQuery.getFields()) {
+    LogicalOperator lastFieldLogicalOperator = null;
+
+    List<Field> fields = subQuery.getFields();
+
+    for (int i = 0; i < fields.size(); i++) {
+
+      Field field = fields.get(i);
       Specification<PhotographyDbo> specificationField = createField(field);
-      if (field.getLogicalOperator() == null) {
-        return specificationSubQuery.and(specificationField); // TODO: fix this
-      } else if (field.getLogicalOperator() == LogicalOperator.AND) {
-        specificationSubQuery.and(specificationField);
-      } else if (field.getLogicalOperator() == LogicalOperator.OR) {
-        specificationSubQuery.or(specificationField);
+
+      if (i == 0) {
+        specificationSubQuery = specificationField;
+        lastFieldLogicalOperator = field.getLogicalOperator();
+      } else if (lastFieldLogicalOperator == LogicalOperator.AND) {
+        specificationSubQuery = specificationSubQuery.and(specificationField);
+      } else if (lastFieldLogicalOperator == LogicalOperator.OR) {
+        specificationSubQuery = specificationSubQuery.or(specificationField);
       }
+
     }
 
     return specificationSubQuery;
   }
 
-  private static Specification<PhotographyDbo> createField(Field field) {
+  public static Specification<PhotographyDbo> createField(Field field) {
     return (root, query, criteriaBuilder) -> {
 
       String fieldName = mapFieldName(field.getFieldName());
@@ -67,7 +87,6 @@ public class PhotographySpecification {
     };
   }
 
-
   private static String mapFieldName(FieldName fieldName) {
     if (fieldName == FieldName.NAME) {
       return "name";
@@ -78,6 +97,10 @@ public class PhotographySpecification {
     }
 
     throw new IllegalArgumentException("Non existing field name");
+  }
+
+  public static Specification<PhotographyDbo> test(String string) {
+    return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("author"), string);
   }
 
 }
